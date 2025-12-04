@@ -24,6 +24,21 @@ public:
         this->marca = nullptr;
         this->numarModeleDisponibile++;
     }
+    Pix(Pix& sursa) {
+        this->culoare = sursa.culoare;
+        this->pret = sursa.pret;
+        if (this->marca != nullptr) {
+            delete[] this->marca;
+        }
+        if (sursa.marca != nullptr) {
+            this->marca = new char[strlen(sursa.marca) + 1];
+            strcpy_s(this->marca, strlen(sursa.marca) + 1, sursa.marca);
+        }
+        else {
+            this->marca = nullptr;
+        }
+        this->numarModeleDisponibile++;
+    }
     Pix(string culoare, double pret, const char* marca) {
         this->culoare = culoare;
         this->pret = pret;
@@ -81,6 +96,23 @@ public:
     static void ActualizareStoc(int contorActualizare) {
         numarModeleDisponibile += contorActualizare;
     }
+    ~Pix() {
+        if (this->marca != nullptr) {
+            delete[] this->marca;
+        }
+    }
+
+    void afisarePix() {
+        cout << "Pix:" << endl;
+        cout << "Culoare " << this->culoare << ", Pret " << this->pret << ", Marca ";
+        if (this->marca != nullptr) {
+            cout << this->marca;
+        }
+        else {
+            cout << "";
+        }
+        cout << ", Numar modele " << this->numarModeleDisponibile << ", Pret minim " << this->MIN_PRET << endl;
+    }
 };
 int Pix::numarModeleDisponibile = 0;
 
@@ -115,6 +147,37 @@ public:
         strcpy_s(this->material, strlen(material) + 1, material);
         this->totalCreioane++;
     }
+    Creion(Creion& sursa) {
+        this->grosimeMina = sursa.grosimeMina;
+        this->lungime = sursa.lungime;
+        if (this->material != nullptr) {
+            delete[] this->material;
+            this->material = nullptr;
+        }
+        if (sursa.material != nullptr) {
+            this->material = new char[strlen(sursa.material) + 1];
+            strcpy_s(this->material, strlen(sursa.material) + 1, sursa.material);
+        }
+        this->totalCreioane++;
+    }
+    ~Creion() {
+        if (this->material == nullptr) {
+            delete[] this->material;
+        }
+    }
+
+    void afisareCreion() {
+        cout << "Creion:" << endl;
+        cout << "Grosime mina " << this->grosimeMina << ", Lungime " << this->lungime << ", Material ";
+        if (this->material != nullptr) {
+            cout << this->material;
+        }
+        else {
+            cout << "";
+        }
+        cout << ", Total creioane " << this->totalCreioane << ", Lungime maxima " << this->MAX_LUNGIME << endl;
+    }
+
     static void CumparareCreion() {
         totalCreioane--;
     }
@@ -196,12 +259,40 @@ public:
         this->pret = pret;
         if (this->producator != nullptr) {
             delete[] this->producator;
-            this->producator = nullptr;
         }
         this->producator = new char[strlen(producator) + 1];
         strcpy_s(this->producator, strlen(producator) + 1, producator);
         this->totalAscutitori++;
     }
+    Ascutitoare(Ascutitoare& sursa) {
+        this->areRezervor = sursa.areRezervor;
+        this->pret = sursa.pret;
+        if (this->producator != nullptr) {
+            delete[] this->producator;
+        }
+        if (sursa.producator != nullptr) {
+            this->producator = new char[strlen(sursa.producator) + 1];
+            strcpy_s(this->producator, strlen(sursa.producator) + 1, sursa.producator);
+        }
+        this->totalAscutitori++;
+    }
+    ~Ascutitoare() {
+        if (this->producator != nullptr) {
+            delete[] this->producator;
+        }
+    }
+    void afisareAscutitoare() {
+        cout << "Ascutitoare:" << endl;
+        cout << "Are rezervor " << this->areRezervor << ", Pret " << this->pret << ", Producator ";
+        if (this->producator != nullptr) {
+            cout << this->producator;
+        }
+        else {
+            cout << "";
+        }
+        cout << ", Total ascutitori " << this->totalAscutitori << ", Capacitate maxima rezervor " << this->MAX_ASCHII_REZERVOR << endl;
+    }
+
     static void GolireStocAscutitori() {
         totalAscutitori = 0;
     }
@@ -254,99 +345,40 @@ int Ascutitoare::totalAscutitori = 0;
 
 int main()
 {
-    Pix pix1 = Pix();
-    Pix pix2 = Pix("Verde");
-    Pix pix3 = Pix("Rosu", 5.0, "BIC");
+    Pix pix1;
+    Pix pix2("Verde");
+    Pix pix3("Rosu", 5.0, "BIC");
 
-    cout << "Pix1" << endl;
-    cout << "Culoare " << pix1.getCuloare() << ", Pret " << pix1.getPret() << ", Marca ";
-    if (pix1.getMarca() != nullptr) {
-        cout << pix1.getMarca();
-    }
-    else {
-        cout << "";
-    }
-    cout<< ", Numar modele " << pix1.getModeleDisponibile() << ", Pret minim " << pix1.getMinPret() << endl;
-    cout << "Pix2" << endl;
-    cout << "Culoare " << pix2.getCuloare() << ", Pret " << pix2.getPret() << ", Marca ";
-    if (pix2.getMarca() != nullptr) {
-        cout << pix2.getMarca();
-    }
-    else {
-        cout << "";
-    }
-    cout << ", Numar modele " << pix2.getModeleDisponibile() << ", Pret minim " << pix2.getMinPret() << endl;
-    cout << "Pix3" << endl;
-    cout << "Culoare " << pix3.getCuloare() << ", Pret " << pix3.getPret() << ", Marca ";
-    if (pix3.getMarca() != nullptr) {
-        cout << pix3.getMarca();
-    }
-    else {
-        cout << "";
-    }
-    cout << ", Numar modele " << pix3.getModeleDisponibile() << ", Pret minim " << pix3.getMinPret() << endl;
+    pix1.afisarePix();
+    pix2.afisarePix();
+    pix3.afisarePix();
 
-    Creion creion1 = Creion();
-    Creion creion2 = Creion(0.9, 15, "Lemn");
-    Creion creion3 = Creion(2.0, 10, "Metal");
-    cout << "Creion1" << endl;
-    cout << "Grosime mina " << creion1.getGrosimeMina() << ", Lungime " << creion1.getLungime() << ", Material ";
-    if (creion1.getMaterial() != nullptr) {
-        cout << creion1.getMaterial();
-    }
-    else {
-        cout << "";
-    }
-    cout<< ", Total creioane " << creion1.getTotalCreioane()<< ", Lungime maxima "<< creion1.getMaxLungime() << endl;
-    cout << "Creion2" << endl;
-    cout << "Grosime mina " << creion2.getGrosimeMina() << ", Lungime " << creion2.getLungime() << ", Material ";
-    if (creion2.getMaterial() != nullptr) {
-        cout << creion2.getMaterial();
-    }
-    else {
-        cout << "";
-    }
-    cout << ", Total creioane " << creion2.getTotalCreioane() << ", Lungime maxima " << creion2.getMaxLungime() << endl;
-    cout << "Creion3" << endl;
-    cout << "Grosime mina " << creion3.getGrosimeMina() << ", Lungime " << creion3.getLungime() << ", Material ";
-    if (creion3.getMaterial() != nullptr) {
-        cout << creion3.getMaterial();
-    }
-    else {
-        cout << "";
-    }
-    cout << ", Total creioane " << creion3.getTotalCreioane() << ", Lungime maxima " << creion3.getMaxLungime() << endl;
+    Pix pix4(pix2);
+    pix4.afisarePix();
 
-    Ascutitoare ascutitoare1 = Ascutitoare();
-    Ascutitoare ascutitoare2 = Ascutitoare("Pelikan");
-    Ascutitoare ascutitoare3 = Ascutitoare(true, 10, "BIC");
-    cout << "Ascutitoare1" << endl;
-    cout << "Are rezervor " << ascutitoare1.getAreRezervor() << ", Pret " << ascutitoare1.getPret() << ", Producator ";
-    if (ascutitoare1.getProducator() != nullptr) {
-        cout << ascutitoare1.getProducator();
-    }
-    else {
-        cout << "";
-    }
-    cout<< ", Total ascutitori " << ascutitoare1.getTotalAscutitori() << ", Capacitate maxima rezervor " << ascutitoare1.getMaxAschiiRezervor() << endl;
-    cout << "Ascutitoare2" << endl;
-    cout << "Are rezervor " << ascutitoare2.getAreRezervor() << ", Pret " << ascutitoare2.getPret() << ", Producator ";
-    if (ascutitoare2.getProducator() != nullptr) {
-        cout << ascutitoare2.getProducator();
-    }
-    else {
-        cout << "";
-    }
-    cout << ", Total ascutitori " << ascutitoare2.getTotalAscutitori() << ", Capacitate maxima rezervor " << ascutitoare2.getMaxAschiiRezervor() << endl;
-    cout << "Ascutitoare3" << endl;
-    cout << "Are rezervor " << ascutitoare3.getAreRezervor() << ", Pret " << ascutitoare3.getPret() << ", Producator ";
-    if (ascutitoare3.getProducator() != nullptr) {
-        cout << ascutitoare3.getProducator();
-    }
-    else {
-        cout << "";
-    }
-    cout << ", Total ascutitori " << ascutitoare3.getTotalAscutitori() << ", Capacitate maxima rezervor " << ascutitoare3.getMaxAschiiRezervor() << endl;
+    Creion creion1;
+    Creion creion2(0.9, 15, "Lemn");
+    Creion creion3(2.0, 10, "Metal");
+    
+    creion1.afisareCreion();
+    creion2.afisareCreion();
+    creion3.afisareCreion();
+
+    Creion creion4(creion3);
+    creion4.afisareCreion();
+
+
+    Ascutitoare ascutitoare1;
+    Ascutitoare ascutitoare2("Pelikan");
+    Ascutitoare ascutitoare3(true, 10, "BIC");
+    
+    ascutitoare1.afisareAscutitoare();
+    ascutitoare2.afisareAscutitoare();
+    ascutitoare3.afisareAscutitoare();
+
+    Ascutitoare ascutitoare4(ascutitoare1);
+    ascutitoare4.afisareAscutitoare();
+   
     return 0;
 }
 
